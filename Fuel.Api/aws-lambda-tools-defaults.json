@@ -1,0 +1,10 @@
+
+{
+    "region" : "us-east-1",
+    "profile" : "default",
+    "s3-bucket" : "dcs-poc-dev-serverlessdeploymentbucket-1ns1m863e2rp",
+    "template"  : "serverless.template",
+    "template-parameters" : "\"ShouldCreateBucket\"=\"false\";\"BucketName\"=\"dcs-poc-dev-serverlessdeploymentbucket-1ns1m863e2rp\"",
+    "stack-name"          : "dcs-poc-dotnet",
+    "framework"           : "netcoreapp3.1"
+}
