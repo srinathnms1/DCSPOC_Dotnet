@@ -16,6 +16,13 @@ namespace Fuel.Api
     using Microsoft.OpenApi.Models;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
+    using System;
+    using Fuel.Api.Helpers;
+    using AutoMapper;
+    using Fuel.Domain.ViewModel;
+    using Fuel.Api.Infrastructure.HttpErrors;
+    using System.Net;
+    using System.Threading.Tasks;
 
     public class Startup
     {
@@ -45,14 +52,17 @@ namespace Fuel.Api
                     });
             });
             services.AddMvcCore(config => config.Filters.Add(typeof(ValidModelStateFilter)));
-            services.AddEntityFrameworkNpgsql().AddDbContext<PostgresContext>(opts => opts.UseNpgsql(Configuration["ConnectionStrings:FuelConnectionString"], builder => builder.MigrationsAssembly(typeof(Startup).Assembly.FullName)));
+            services.AddEntityFrameworkNpgsql()
+                .AddDbContext<PostgresContext>((serviceProvider, options) => options
+                .UseNpgsql(Helper.GetConnectionString(), builder => builder.MigrationsAssembly(typeof(Startup).Assembly.FullName))
+                .UseInternalServiceProvider(serviceProvider));
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped(typeof(IFuelInfoRepository), typeof(FuelInfoRepository));
             services.AddScoped(typeof(ILocationRepository), typeof(LocationRepository));
             services.AddScoped(typeof(IVehicleRealTimeInfoRepository), typeof(VehicleRealTimeInfoRepository));
             services.AddScoped(typeof(IFuelService), typeof(FuelService));
             services.AddScoped(typeof(ILocationService), typeof(LocationService));
-
+            services.AddAutoMapper(typeof(LocationViewModel));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DCS Service", Version = "v1" });
@@ -79,6 +89,14 @@ namespace Fuel.Api
                 endpoints.MapControllers();
             });
 
+            app.UseExceptionHandler(errorApp =>
+            {
+                errorApp.Run(context =>
+                {
+                    var userMessage = new[] { context.Response.Body.ToString() };
+                    return Task.FromResult(HttpError.Create(env, (HttpStatusCode)context.Response.StatusCode, context.Response.StatusCode.ToString(), userMessage, "Unhandled Error"));
+                });
+            });
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

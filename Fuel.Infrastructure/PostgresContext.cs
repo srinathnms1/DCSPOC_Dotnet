@@ -6,7 +6,7 @@
 
     public class PostgresContext : DbContext
     {
-        public const string DEFAULT_SCHEMA = "postgres";
+        public PostgresContext() { }
         public PostgresContext(DbContextOptions<PostgresContext> options) : base(options) { }
         public DbSet<DcsDriverMaster> DcsDriverMaster { get; set; }
         public DbSet<DcsDriverService> DcsDriverService { get; set; }
@@ -17,8 +17,18 @@
         public DbSet<DcsLocation> DcsLocation { get; set; }
         public DbSet<DcsLogs> DcsLogs { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseNpgsql("Host=localhost;Database=TestDb;Username=openpg;Password=openpgpwd");
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.ApplyConfiguration(new DriverEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new DriverServiceEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new DriverVehicleEntityTypeConfiguration());

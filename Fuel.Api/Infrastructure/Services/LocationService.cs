@@ -3,31 +3,24 @@
     using Fuel.Domain;
     using System.Collections.Generic;
     using Fuel.Domain.ViewModel;
+    using AutoMapper;
 
     public class LocationService : ILocationService
     {
         private readonly ILocationRepository _locationRepository;
+        private readonly IMapper _mapper;
 
-        public LocationService(ILocationRepository locationRepository)
+        public LocationService(ILocationRepository locationRepository, IMapper mapper)
         {
             _locationRepository = locationRepository;
+            _mapper = mapper;
         }
 
         public List<LocationViewModel> GetLocations(LocationRequest locationRequest)
         {
             var locations = _locationRepository.GetLocations(locationRequest);
-            var locationViewModel = new List<LocationViewModel>();
-            locations.ForEach(c => locationViewModel.Add(new LocationViewModel()
-            {
-                DriverMobile = c.VehicleRealTimeInfo.DriverVehicle.Driver.DriverMobile,
-                DriverName = c.VehicleRealTimeInfo.DriverVehicle.Driver.DriverName,
-                VehicleName = c.VehicleRealTimeInfo.DriverVehicle.Vehicle.VehicleName,
-                VehicleLicenseNo = c.VehicleRealTimeInfo.DriverVehicle.Vehicle.VehicleLicenseNo,
-                Latitude = c.Latitude,
-                Longitude = c.Longitude,
-                PacketTime = c.VehicleRealTimeInfo.PacketTime
-            }));
-            return locationViewModel;
+            var bookingVlocationViewModeliewModel = _mapper.Map<List<LocationViewModel>>(locations);
+            return bookingVlocationViewModeliewModel;
         }
     }
 }

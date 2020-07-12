@@ -17,7 +17,10 @@ namespace Fuel.Api
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            #region Setup for development
+            CreateHostBuilder(args).Build().Run(); 
+            #endregion
+            #region Setup for deployment
             //Log.Information($"App started at {DateTime.Now}");
             //var lambdaEntry = new LambdaEntryPoint();
             //var functionHandler = (Func<APIGatewayProxyRequest, ILambdaContext, Task<APIGatewayProxyResponse>>)(lambdaEntry.FunctionHandlerAsync);
@@ -25,7 +28,8 @@ namespace Fuel.Api
             //using (var bootstrap = new LambdaBootstrap(handlerWrapper))
             //{
             //    bootstrap.RunAsync().Wait();
-            //}
+            //} 
+            #endregion
         }
 
         public static IWebHostBuilder CreateHostBuilder(string[] args) =>

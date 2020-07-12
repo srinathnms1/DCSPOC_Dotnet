@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections;
+using Fuel.Infrastructure.Functions;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Fuel.Infrastructure.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,25 +40,6 @@ namespace Fuel.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DCS_Logs",
-                columns: table => new
-                {
-                    id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    application = table.Column<string>(maxLength: 100, nullable: true),
-                    logged = table.Column<string>(nullable: true),
-                    level = table.Column<string>(maxLength: 100, nullable: true),
-                    message = table.Column<string>(maxLength: 8000, nullable: true),
-                    logger = table.Column<string>(maxLength: 8000, nullable: true),
-                    callsite = table.Column<string>(maxLength: 8000, nullable: true),
-                    exception = table.Column<string>(maxLength: 8000, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DCS_Logs", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -137,9 +119,9 @@ namespace Fuel.Infrastructure.Migrations
                 {
                     FuelInfoId = table.Column<int>(nullable: false),
                     DriverVehicleId = table.Column<int>(nullable: false),
-                    CurrentVolume = table.Column<double>(nullable: true),
-                    RefuelVolume = table.Column<double>(nullable: true),
-                    PacketTime = table.Column<DateTime>(nullable: true)
+                    CurrentVolume = table.Column<double>(nullable: false),
+                    RefuelVolume = table.Column<double>(nullable: false),
+                    PacketTime = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -158,7 +140,7 @@ namespace Fuel.Infrastructure.Migrations
                 {
                     VehicleRealTimeInfoId = table.Column<int>(nullable: false),
                     DriverVehicleId = table.Column<int>(nullable: false),
-                    PacketTime = table.Column<DateTime>(nullable: true),
+                    PacketTime = table.Column<DateTime>(nullable: false),
                     VehicleSpeed = table.Column<double>(nullable: true),
                     HarshTurning = table.Column<int>(nullable: true),
                     HarshBreaking = table.Column<int>(nullable: true),
@@ -183,8 +165,8 @@ namespace Fuel.Infrastructure.Migrations
                 columns: table => new
                 {
                     LocationId = table.Column<int>(nullable: false),
-                    Latitude = table.Column<double>(nullable: true),
-                    Longitude = table.Column<double>(nullable: true),
+                    Latitude = table.Column<double>(nullable: false),
+                    Longitude = table.Column<double>(nullable: false),
                     VehicleRealTimeInfoId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -227,6 +209,17 @@ namespace Fuel.Infrastructure.Migrations
                 name: "fkIdx_184",
                 table: "DCS_VehicleRealTimeInfo",
                 column: "DriverVehicleId");
+
+            migrationBuilder.Sql(DcsCoreFunctions.GetRandom);
+            migrationBuilder.Sql(DcsCoreFunctions.GetRandomLicenseNo);
+            migrationBuilder.Sql(DcsCoreFunctions.GetRandomPhoneNumber);
+            migrationBuilder.Sql(DcsCoreFunctions.GetRandomWithNumeric);
+            migrationBuilder.Sql(DcsDriverFunctions.PopulateDrivers);
+            migrationBuilder.Sql(DcsVehicleFunctions.PopulateVehicles);
+            migrationBuilder.Sql(DcsDriverVehicleFunctions.PopulateDriverVehicle);
+            migrationBuilder.Sql(DcsDataPopulationFunctions.PopulateData);
+            migrationBuilder.Sql(DcsFuelFunctions.GetTankCapacity);
+            migrationBuilder.Sql(DcsLocationFunctions.GetMapRandomSoureAndDestination);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -244,9 +237,6 @@ namespace Fuel.Infrastructure.Migrations
                 name: "dcs_logs");
 
             migrationBuilder.DropTable(
-                name: "DCS_Logs");
-
-            migrationBuilder.DropTable(
                 name: "DCS_VehicleRealTimeInfo");
 
             migrationBuilder.DropTable(
@@ -257,6 +247,17 @@ namespace Fuel.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "DCS_VehicleMaster");
+
+            migrationBuilder.Sql(DcsCoreFunctions.RemoveGetRandom);
+            migrationBuilder.Sql(DcsCoreFunctions.RemoveGetRandomPhoneNumber);
+            migrationBuilder.Sql(DcsCoreFunctions.RemoveGetRandomWithNumeric);
+            migrationBuilder.Sql(DcsCoreFunctions.ReomveGetRandomLicenseNo);
+            migrationBuilder.Sql(DcsDriverFunctions.RemovePopulateDrivers);
+            migrationBuilder.Sql(DcsVehicleFunctions.RemovePopulateVehicles);
+            migrationBuilder.Sql(DcsDriverVehicleFunctions.RemovePopulateDriverVehicle);
+            migrationBuilder.Sql(DcsDataPopulationFunctions.RemovePopulateData);
+            migrationBuilder.Sql(DcsFuelFunctions.RemoveGetTankCapacity);
+            migrationBuilder.Sql(DcsLocationFunctions.RemoveGetMapRandomSoureAndDestination);
         }
     }
 }
