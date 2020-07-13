@@ -4,6 +4,7 @@
     using Fuel.Domain.ViewModel;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public class FuelService : IFuelService
     {
@@ -16,9 +17,9 @@
             _vehicleRealTimeInfoRepository = vehicleRealTimeInfoRepository;
         }
 
-        public FuelInfoViewModel GetFuelInfo(FuelInfoRequest fuelInfoRequest)
+        public async Task<FuelInfoViewModel> GetFuelInfoAsync(FuelInfoRequest fuelInfoRequest)
         {
-            var fuelInfo = _fuelInfoRepository.GetFuelInfo(fuelInfoRequest);
+            var fuelInfo = await _fuelInfoRepository.GetFuelInfo(fuelInfoRequest).ConfigureAwait(false);
             var fuleInfoModelList = new List<FuelInfoModel>();
             var refuelModelList = new List<FuelInfoModel>();
             var leakageModelList = new List<FuelInfoModel>();

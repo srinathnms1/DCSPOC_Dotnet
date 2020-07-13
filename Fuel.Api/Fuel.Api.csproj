@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DcsService\Fuel.Contracts\Fuel.Contracts.csproj" />
     <ProjectReference Include="..\Fuel.Contracts\Fuel.Contracts.csproj" />
     <ProjectReference Include="..\Fuel.Domain\Fuel.Domain.csproj" />
     <ProjectReference Include="..\Fuel.Infrastructure\Fuel.Infrastructure.csproj" />

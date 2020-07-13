@@ -21,7 +21,7 @@
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql("Host=localhost;Database=TestDb;Username=openpg;Password=openpgpwd");
+                optionsBuilder.UseNpgsql("Host=fmspoc.ctsszeh5unue.ap-southeast-1.rds.amazonaws.com;Database=postgres;Username=postgres;Password=Poc123$*");
             }
         }
 

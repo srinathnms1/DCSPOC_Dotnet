@@ -2,9 +2,10 @@
 {
     using Fuel.Domain.ViewModel;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public interface ILocationService
     {
-        List<LocationViewModel> GetLocations(LocationRequest locationRequest);
+        Task<List<LocationViewModel>> GetLocationsAsync(LocationRequest locationRequest);
     }
 }

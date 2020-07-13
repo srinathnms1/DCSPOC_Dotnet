@@ -5,6 +5,7 @@
     using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using Fuel.Domain.ViewModel;
+    using System.Threading.Tasks;
 
     public class LocationRepository : GenericRepository<DcsLocation>, ILocationRepository
     {
@@ -13,7 +14,7 @@
         {
         }
 
-        public List<DcsLocation> GetLocations(LocationRequest locationRequest)
+        public Task<List<DcsLocation>> GetLocations(LocationRequest locationRequest)
         {
             var locations = GetAll().Include(i => i.VehicleRealTimeInfo)
                 .Where(c => c.VehicleRealTimeInfo.DriverVehicle.Driver.DriverId == locationRequest.DriverId
@@ -21,7 +22,7 @@
                 && c.VehicleRealTimeInfo.PacketTime.Date <= locationRequest.ToDate.Date))
                 .Include(i => i.VehicleRealTimeInfo.DriverVehicle.Driver)
                 .Include(i => i.VehicleRealTimeInfo.DriverVehicle.Vehicle).ToList();
-            return locations;
+            return Task.Run(() => locations);
         }
     }
 }

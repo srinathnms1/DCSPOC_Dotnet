@@ -5,6 +5,7 @@
     using Microsoft.EntityFrameworkCore;
     using System.Linq;
     using Fuel.Domain.ViewModel;
+    using System.Threading.Tasks;
 
     public class FuelInfoRepository : GenericRepository<DcsFuelInfo>, IFuelInfoRepository
     {
@@ -13,7 +14,7 @@
         {
         }
 
-        public List<DcsFuelInfo> GetFuelInfo(FuelInfoRequest fuelInfoRequest)
+        public Task<List<DcsFuelInfo>> GetFuelInfo(FuelInfoRequest fuelInfoRequest)
         {
             var fuelInfo = GetAll()
                 .Where(c => c.DriverVehicle.Driver.DriverId == fuelInfoRequest.DriverId
@@ -21,7 +22,7 @@
                 && c.PacketTime.Date <= fuelInfoRequest.ToDate.Date))
                 .Include(i => i.DriverVehicle).ToList();
 
-            return fuelInfo;
+            return Task.Run(() => fuelInfo);
         }
     }
 }

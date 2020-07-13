@@ -7,6 +7,6 @@
 
     public interface IFuelInfoRepository : IGenericRepository<DcsFuelInfo>
     {
-        List<DcsFuelInfo> GetFuelInfo(FuelInfoRequest fuelInfoRequest);
+        Task<List<DcsFuelInfo>> GetFuelInfo(FuelInfoRequest fuelInfoRequest);
     }
 }

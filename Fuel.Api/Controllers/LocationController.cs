@@ -5,6 +5,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Fuel.Api.Infrastructure.Extensions;
     using Microsoft.Extensions.Logging;
+    using System.Threading.Tasks;
 
     [ApiController]
     [Route("api/[controller]")]
@@ -20,15 +21,15 @@
 
         // GET api/fuelinfo
         [HttpGet, Route("")]
-        public IActionResult Get([FromQuery] LocationRequest locationServiceRequest)
+        public async Task<IActionResult> GetAsync([FromQuery] LocationRequest locationServiceRequest)
         {
             _logger.LogInformation($"Requesting fuel information from {this.GetControllerName()}");
             var locationRequest = new Fuel.Domain.ViewModel.LocationRequest() { 
                 DriverId = locationServiceRequest.DriverId,
-                FromDate = locationServiceRequest.FromDate, 
+                FromDate = locationServiceRequest.FromDate,
                 ToDate = locationServiceRequest.ToDate
             };
-            var locations = _locationService.GetLocations(locationRequest);
+            var locations = await _locationService.GetLocationsAsync(locationRequest).ConfigureAwait(false);
             return Ok(locations);
         }
     }

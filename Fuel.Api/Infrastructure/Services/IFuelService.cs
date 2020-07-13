@@ -2,9 +2,10 @@
 {
     using Fuel.Domain;
     using Fuel.Domain.ViewModel;
+    using System.Threading.Tasks;
 
     public interface IFuelService
     {
-        FuelInfoViewModel GetFuelInfo(FuelInfoRequest fuelInfoRequest);
+        Task<FuelInfoViewModel> GetFuelInfoAsync(FuelInfoRequest fuelInfoRequest);
     }
 }

@@ -7,6 +7,6 @@
 
     public interface ILocationRepository : IGenericRepository<DcsLocation>
     {
-        List<DcsLocation> GetLocations(LocationRequest locationRequest);
+        Task<List<DcsLocation>> GetLocations(LocationRequest locationRequest);
     }
 }
