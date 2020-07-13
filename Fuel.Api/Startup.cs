@@ -89,7 +89,7 @@ namespace Fuel.Api
                 endpoints.MapControllers();
             });
 
-            app.UseExceptionHandler(errorApp =>
+            app.UseExceptionHandler(errorApp => 
             {
                 errorApp.Run(context =>
                 {
@@ -100,7 +100,7 @@ namespace Fuel.Api
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "DCS Service");
+                c.SwaggerEndpoint($"/{Configuration["ASPNETCORE_ENVIRONMENT"]}/swagger/v1/swagger.json", "DCS Service");
             });
         }
     }

@@ -1,9 +1,11 @@
 ﻿namespace Fuel.Api
 {
+    using Fuel.Api.Helpers;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
     using Serilog;
+    using Serilog.Events;
     using System;
     using System.IO;
 
@@ -21,8 +23,9 @@
                 config.AddEnvironmentVariables();
             })
             .UseStartup<Startup>()
-            .UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration.Enrich.FromLogContext()
-                .ReadFrom.Configuration(hostingContext.Configuration))
+            .UseSerilog((hostingContext, loggerConfiguration) =>
+                loggerConfiguration.Enrich.FromLogContext().MinimumLevel.Information()
+                .WriteTo.PostgreSQL(Helper.GetConnectionString(), "DCS_Logs", restrictedToMinimumLevel: LogEventLevel.Information, needAutoCreateTable: true, batchSizeLimit: 1))
             .UseLambdaServer();
         }
     }

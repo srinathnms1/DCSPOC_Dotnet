@@ -12,13 +12,16 @@ namespace Fuel.Api
     using Microsoft.Extensions.Configuration;
     using System.IO;
     using Serilog;
+    using Serilog.Events;
+    using Fuel.Api.Helpers;
+    using Serilog.Sinks.PostgreSQL;
 
     public class Program
     {
         public static void Main(string[] args)
         {
             #region Setup for development
-            CreateHostBuilder(args).Build().Run(); 
+            CreateHostBuilder(args).Build().Run();
             #endregion
             #region Setup for deployment
             //Log.Information($"App started at {DateTime.Now}");
@@ -28,7 +31,7 @@ namespace Fuel.Api
             //using (var bootstrap = new LambdaBootstrap(handlerWrapper))
             //{
             //    bootstrap.RunAsync().Wait();
-            //} 
+            //}
             #endregion
         }
 
@@ -43,7 +46,8 @@ namespace Fuel.Api
                      config.AddEnvironmentVariables();
                  })
                 .UseStartup<Startup>();
-                //.UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration.Enrich.FromLogContext()
-                //    .ReadFrom.Configuration(hostingContext.Configuration));
+                //.UseSerilog((hostingContext, loggerConfiguration) =>
+                //loggerConfiguration.Enrich.FromLogContext().MinimumLevel.Information()
+                //.WriteTo.PostgreSQL(Helper.GetConnectionString(), "DCS_Logs", restrictedToMinimumLevel: LogEventLevel.Information, needAutoCreateTable: true, batchSizeLimit: 1));
     }
 }
